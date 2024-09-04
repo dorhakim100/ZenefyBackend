@@ -23,6 +23,7 @@ router.get('/:id', log, getStationById)
 router.post('/', log, requireAuth, addStation)
 router.put('/:id', requireAuth, updateStation)
 router.delete('/:id', requireAuth, removeStation)
+
 // router.delete('/:id', requireAuth, requireAdmin, removeStation)
 
 router.post('/:id/msg', requireAuth, addStationMsg)

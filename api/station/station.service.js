@@ -5,7 +5,7 @@ import { makeId } from '../../services/util.service.js'
 import { dbService } from '../../services/db.service.js'
 import { asyncLocalStorage } from '../../services/als.service.js'
 
-const PAGE_SIZE = 3
+// const PAGE_SIZE = 3
 
 export const stationService = {
   remove,
@@ -17,7 +17,7 @@ export const stationService = {
   removeStationMsg,
 }
 
-async function query(filterBy = { txt: '' }) {
+async function query(filterBy = { txt: '', stationType: '' }) {
   try {
     const criteria = _buildCriteria(filterBy)
     const sort = _buildSort(filterBy)
@@ -25,9 +25,9 @@ async function query(filterBy = { txt: '' }) {
     const collection = await dbService.getCollection('station')
     var stationCursor = await collection.find(criteria, { sort })
 
-    if (filterBy.pageIdx !== undefined) {
-      stationCursor.skip(filterBy.pageIdx * PAGE_SIZE).limit(PAGE_SIZE)
-    }
+    // if (filterBy.pageIdx !== undefined) {
+    //   stationCursor.skip(filterBy.pageIdx * PAGE_SIZE).limit(PAGE_SIZE)
+    // }
 
     const stations = stationCursor.toArray()
     return stations
@@ -60,10 +60,17 @@ async function remove(stationId) {
     const criteria = {
       _id: ObjectId.createFromHexString(stationId),
     }
-    if (!isAdmin) criteria['owner._id'] = ownerId
 
-    const collection = await dbService.getCollection('station')
-    const res = await collection.deleteOne(criteria)
+    console.log('loggedinUser:', loggedinUser)
+
+    // if (!isAdmin) criteria['owner._id'] = ownerId
+    console.log('critiria', criteria)
+
+    const station = await getById(stationId)
+    if (station.createdBy._id === ownerId) {
+      const collection = await dbService.getCollection('station')
+      const res = await collection.deleteOne(criteria)
+    }
 
     if (res.deletedCount === 0) throw 'Not your station'
     return stationId
@@ -75,6 +82,10 @@ async function remove(stationId) {
 
 async function add(station) {
   try {
+    if (station._id) {
+      const objectId = new ObjectId(station._id)
+      station._id = objectId
+    }
     const collection = await dbService.getCollection('station')
     await collection.insertOne(station)
 
@@ -87,7 +98,7 @@ async function add(station) {
 
 async function update(station) {
   // to modify
-  const stationToSave = { vendor: station.vendor, speed: station.speed }
+  const stationToSave = station
 
   try {
     const criteria = { _id: ObjectId.createFromHexString(station._id) }
@@ -135,8 +146,8 @@ async function removeStationMsg(stationId, msgId) {
 
 function _buildCriteria(filterBy) {
   const criteria = {
-    vendor: { $regex: filterBy.txt, $options: 'i' },
-    speed: { $gte: filterBy.minSpeed },
+    title: { $regex: filterBy.txt, $options: 'i' },
+    stationType: { $regex: filterBy.txt, $options: 'i' },
   }
 
   return criteria

@@ -6,10 +6,7 @@ export async function getStations(req, res) {
     // to modify
     const filterBy = {
       txt: req.query.txt || '',
-      minSpeed: +req.query.minSpeed || 0,
-      sortField: req.query.sortField || '',
-      sortDir: req.query.sortDir || 1,
-      pageIdx: req.query.pageIdx,
+      stationType: req.query.stationType || '',
     }
     const stations = await stationService.query(filterBy)
     res.json(stations)
@@ -34,7 +31,7 @@ export async function addStation(req, res) {
   const { loggedinUser, body: station } = req
 
   try {
-    station.owner = loggedinUser
+    station.createdBy = loggedinUser
     const addedStation = await stationService.add(station)
     res.json(addedStation)
   } catch (err) {
@@ -45,9 +42,9 @@ export async function addStation(req, res) {
 
 export async function updateStation(req, res) {
   const { loggedinUser, body: station } = req
-  const { _id: userId, isAdmin } = loggedinUser
+  const { _id, isAdmin } = loggedinUser
 
-  if (!isAdmin && station.owner._id !== userId) {
+  if (!isAdmin && station.createdBy._id !== userId) {
     res.status(403).send('Not your station...')
     return
   }
@@ -64,6 +61,7 @@ export async function updateStation(req, res) {
 export async function removeStation(req, res) {
   try {
     const stationId = req.params.id
+    console.log(stationId)
     const removedId = await stationService.remove(stationId)
 
     res.send(removedId)

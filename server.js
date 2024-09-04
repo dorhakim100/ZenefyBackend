@@ -12,6 +12,9 @@ import { setupSocketAPI } from './services/socket.service.js'
 
 import { setupAsyncLocalStorage } from './middlewares/setupAls.middleware.js'
 
+import { MongoClient, ObjectId } from 'mongodb'
+import crypto from 'crypto'
+
 const app = express()
 const server = http.createServer(app)
 
@@ -57,3 +60,44 @@ const port = process.env.PORT || 3030
 server.listen(port, () => {
   logger.info('Server is running on port: ' + port)
 })
+
+// async function convertIds() {
+//   const uri = 'mongodb://localhost:27017' // Replace with your MongoDB connection string
+//   const client = new MongoClient(uri, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+
+//   try {
+//     await client.connect()
+//     const database = client.db('Zenefy') // Replace with your database name
+//     const collection = database.collection('user') // Replace with your collection name
+
+//     const cursor = collection.find()
+//     while (await cursor.hasNext()) {
+//       const doc = await cursor.next()
+
+//       // Create a new ObjectId based on the existing _id
+//       const newObjectId = new ObjectId(
+//         crypto
+//           .createHash('sha1')
+//           .update(doc._id.toString())
+//           .digest('hex')
+//           .substring(0, 24)
+//       )
+
+//       // Copy the existing document, but with the new _id
+//       const newDoc = { ...doc, _id: newObjectId }
+
+//       // Insert the new document
+//       await collection.insertOne(newDoc)
+
+//       // Remove the old document
+//       await collection.deleteOne({ _id: doc._id })
+//     }
+//   } finally {
+//     await client.close()
+//   }
+// }
+
+// convertIds().catch(console.error)
