@@ -98,7 +98,27 @@ async function add(station) {
 
 async function update(station) {
   // to modify
-  const stationToSave = station
+  const {
+    title,
+    items,
+    cover,
+    addedAt,
+    stationType,
+    createdBy,
+    createdAt,
+    preview,
+  } = station
+  const stationToSave = {
+    title,
+    items,
+    cover,
+    addedAt,
+    preview,
+    stationType,
+    createdBy,
+    createdAt,
+  }
+  console.log(stationToSave)
 
   try {
     const criteria = { _id: ObjectId.createFromHexString(station._id) }

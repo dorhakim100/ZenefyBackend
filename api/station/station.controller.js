@@ -42,7 +42,9 @@ export async function addStation(req, res) {
 
 export async function updateStation(req, res) {
   const { loggedinUser, body: station } = req
-  const { _id, isAdmin } = loggedinUser
+  // const {  _id, isAdmin } = loggedinUser
+  const userId = loggedinUser._id
+  const { isAdmin } = loggedinUser
 
   if (!isAdmin && station.createdBy._id !== userId) {
     res.status(403).send('Not your station...')
