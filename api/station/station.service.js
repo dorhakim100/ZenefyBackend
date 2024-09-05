@@ -126,6 +126,7 @@ async function update(station) {
     createdBy,
     createdAt,
     preview,
+    isLiked,
   } = station
   const stationToSave = {
     title,
@@ -144,6 +145,23 @@ async function update(station) {
 
     const collection = await dbService.getCollection('station')
     await collection.updateOne(criteria, { $set: stationToSave })
+    if (isLiked) {
+      const user = await userService.getById(createdBy._id)
+      const newLikedSongs = station.items.map((item) => {
+        return item.id
+      })
+      const userToUpdate = {
+        fullname: user.fullname,
+        likedStationsIds: user.likedStationsIds,
+        likedSongsIds: newLikedSongs,
+      }
+      const userCollection = await dbService.getCollection('user')
+
+      await userCollection.updateOne(
+        { _id: ObjectId.createFromHexString(createdBy._id) },
+        { $set: userToUpdate }
+      )
+    }
 
     return station
   } catch (err) {

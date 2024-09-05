@@ -54,6 +54,7 @@ export async function updateStation(req, res) {
   try {
     const updatedStation = await stationService.update(station)
     res.json(updatedStation)
+    return updatedStation
   } catch (err) {
     logger.error('Failed to update station', err)
     res.status(400).send({ err: 'Failed to update station' })
