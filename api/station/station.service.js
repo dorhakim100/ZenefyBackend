@@ -4,6 +4,7 @@ import { logger } from '../../services/logger.service.js'
 import { makeId } from '../../services/util.service.js'
 import { dbService } from '../../services/db.service.js'
 import { asyncLocalStorage } from '../../services/als.service.js'
+import { userService } from '../user/user.service.js'
 
 // const PAGE_SIZE = 3
 
@@ -57,19 +58,37 @@ async function remove(stationId) {
   const { _id: ownerId, isAdmin } = loggedinUser
 
   try {
+    const user = await userService.getById(ownerId)
+    const idxToRemove = user.likedStationsIds.findIndex(
+      (id) => id === stationId
+    )
+    const { fullname, likedStationsIds, likedSongsIds } = user
+
+    user.likedStationsIds.splice(idxToRemove, 1)
+    const newLikedStationsIds = user.likedStationsIds
+
+    const userToUpdate = {
+      fullname,
+      likedStationsIds: newLikedStationsIds,
+      likedSongsIds,
+    }
+
     const criteria = {
       _id: ObjectId.createFromHexString(stationId),
     }
 
-    console.log('loggedinUser:', loggedinUser)
-
     // if (!isAdmin) criteria['owner._id'] = ownerId
-    console.log('critiria', criteria)
 
     const station = await getById(stationId)
+    let res
     if (station.createdBy._id === ownerId) {
       const collection = await dbService.getCollection('station')
-      const res = await collection.deleteOne(criteria)
+      res = await collection.deleteOne(criteria)
+      const userCollection = await dbService.getCollection('user')
+      await userCollection.updateOne(
+        { _id: ObjectId.createFromHexString(ownerId) },
+        { $set: userToUpdate }
+      )
     }
 
     if (res.deletedCount === 0) throw 'Not your station'

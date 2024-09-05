@@ -63,7 +63,7 @@ export async function updateStation(req, res) {
 export async function removeStation(req, res) {
   try {
     const stationId = req.params.id
-    console.log(stationId)
+
     const removedId = await stationService.remove(stationId)
 
     res.send(removedId)
