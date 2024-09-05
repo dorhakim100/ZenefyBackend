@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "35675e68f4b5af7b995d9205"
+  },
+  "fullname": "Guest",
+  "username": "Guest",
+  "likedStationsIds": [
+    "4d2b4c7831d72d974effe9f2",
+    "9b828c949d88fc85091977d2",
+    "017aead80158287b44a9e1ef",
+    "eea466d1b245718f75a18403",
+    "288e661a7cf45e497696ad1d",
+    "9a7e08410ed4e67abf35dfba",
+    "a548f2de302f0c40f701e82b",
+    "4494e08e75b5bdc383112960",
+    "9c05fe5563f4465135832263",
+    "66d9af60203b665f54cd2163",
+    "66d9afa0203b665f54cd2164"
+  ],
+  "likedSongsIds": [
+    "creator1",
+    "JX6Dy3",
+    "ZAZIRK",
+    "9je28A",
+    "3J9rjg",
+    "aew9tr",
+    "zoaP5d",
+    "AM1",
+    "LvBe1",
+    "Strks1",
+    "G2G3h3",
+    "CT9zn5",
+    "VOZ2C5",
+    "S0syJA",
+    "Flor1",
+    "zoaP5d"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66d9bac0203b665f54cd2182"
+  },
+  "username": "dor100",
+  "password": "$2b$10$jCi8IT.lTEXXZK2twaCbd.d95KhWKT0tNfykWvn.4e0JuN5Nsq36S",
+  "fullname": "Dor Hakim",
+  "imgUrl": null,
+  "isAdmin": null,
+  "likedStationsIds": [
+    "66d9bac039d646f04c7bf4aa",
+    "66d9baeb203b665f54cd2183",
+    "66d9be2b203b665f54cd2185"
+  ],
+  "likedSongsIds": [
+    "SQPcUo",
+    "In6Bqg",
+    "WJC4m7",
+    "3J9rjg",
+    "OXV5kn"
+  ]
+}]
